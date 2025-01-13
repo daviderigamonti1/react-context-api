@@ -4,8 +4,6 @@ import { useState, useEffect } from "react"
 import axios from "axios";
 import Card from "../components/Card"
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 function PostPage() {
     const { id } = useParams();
     const [post, setpost] = useState(null);

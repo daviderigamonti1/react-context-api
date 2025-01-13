@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../contexts/GlobalContext";
 
 import axios from "axios";
 
