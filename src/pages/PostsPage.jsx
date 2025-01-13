@@ -1,32 +1,37 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
 import axios from "axios";
 
 import Card from "../components/Card";
-import MyForm from "./MyForm";
 import Loader from "../components/Loader";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function MainComponent() {
-    const [postItem, setPostItem] = useState([]);
+    //const [postItem, setPostItem] = useState([]);
+    const { posts, setPosts } = useGlobalContext();
 
     const [loading, setLoading] = useState(false);
-
     useEffect(getData, []);
 
     function getData() {
         setLoading(true);
-        axios
-            .get(apiUrl + "/posts")
+        axios.
+            get(apiUrl + "/posts")
             .then((res) => {
-                setPostItem(res.data.data)
+                console.log(res)
+                setPosts(res.data.data);
             })
-            .catch((error) => console.error("Errore durante il recupero dei dati", error))
+            .catch((error) => {
+                console.log(error);
+                navigate("/posts");
+            })
             .finally(() => {
-                console.log("finally");
+                console.log("Finally");
                 setLoading(false);
             })
     }
@@ -47,8 +52,8 @@ function MainComponent() {
             {loading && <Loader />}
             <Link className="btn btn-info m-4" to="create">Aggiungi un post</Link>
             <div className="row gy-4">
-                {postItem.length > 0
-                    ? postItem.map((post) => (
+                {posts.length > 0
+                    ? posts.map((post) => (
                         <div className="col-12 col-md-6 col-lg-4" key={post.id}>
                             <Card
                                 image={post.image}

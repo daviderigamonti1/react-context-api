@@ -1,10 +1,10 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../contexts/GlobalContext";
 
 import axios from "axios";
 
 import Loader from "../components/Loader";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -17,7 +17,7 @@ const newPost = {
 
 function MyForm() {
     const [formData, setFormData] = useState(newPost);
-
+    const { setAlertData } = useGlobalContext();
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -35,7 +35,12 @@ function MyForm() {
             axios
                 .post(apiUrl + "/posts", formData)
                 .then((res) => {
-                    navigate("/posts")
+                    const id = res.data.id;
+                    setAlertData({
+                        type: "success",
+                        message: `La pizza con id: ${id} è stata salvata`,
+                    });
+                    navigate("/posts");
                 })
                 .catch((error) => {
                     console.log(error);

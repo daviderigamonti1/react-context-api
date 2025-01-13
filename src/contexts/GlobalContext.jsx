@@ -1,38 +1,14 @@
-import { createContext, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-
-import axios from "axios";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import { createContext, useState, useContext } from "react";
 
 const GlobalContext = createContext();
 const initialData = { type: "", message: "" };
 
 const GlobalProvider = ({ children }) => {
     const [alertData, setAlertData] = useState(initialData);
-    const [post, setPost] = useState(null);
-    const { id } = useParams();
-    const navigate = useNavigate();
+    const [posts, setPosts] = useState([]);
 
-    useEffect(getData, [id, navigate]);
-
-    function getData() {
-
-        axios.get(apiUrl + "/posts/" + id)
-            .then((res) => {
-                console.log(res)
-                setPost(res.data.item);
-            })
-            .catch((error) => {
-                console.log(error);
-                navigate("/posts");
-            })
-            .finally(() => {
-                console.log("Finally");
-            })
-    }
     return (
-        <GlobalContext.Provider value={{ alertData, setAlertData, post, setPost }}>
+        <GlobalContext.Provider value={{ alertData, setAlertData, posts, setPosts }}>
             {children}
         </GlobalContext.Provider>
     )
@@ -43,4 +19,4 @@ function useGlobalContext() {
     return context;
 }
 
-export default { GlobalProvider, useGlobalContext };
+export { GlobalProvider, useGlobalContext };
